@@ -31,4 +31,5 @@ int main()
 }
 ```
 大家会看到， CallPrint 分别被调用了两次。第一次是变量x，这里它充当左值引用的角色。第二次是常数0，这里它充当右值引用的角色。虽然调用的都是同一个 CallPrint，但是由于你传递进去的类型的不同，将会分别调用两个不同的 Print 函数。
-CallPrint(x)的类型计算过程是，首先x的类型是int&，但是CallPrint的参数却是T&&。由于类型折叠的关系，想要让 T&& 变成 int& ，那么 T 就只能是 int& &&, 然后 
+CallPrint(x)的类型计算过程是，首先x的类型是int&，但是CallPrint的参数却是T&&。由于类型折叠的关系，想要让 T&& 变成 int& ，那么 T 就只能是 int& , 然后 int& &&就可以得到 int& 了。所以调用 forward 的时候，其模板参数是 T，也就是 int&。std::forward<int&>(x)当然也就返回一个 int& 了。
+CallPrint(0) 的类型计算过程是，首先 0 的类型是 constexpr int（也就是说他在需要的时候可以被看成 int, const int, const int&, int&& 和 const int&& 等)，但是 CallPrint 的参数却是 T&&。 那么 T 就只能是 int 。
